@@ -5,6 +5,10 @@ VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiblioTech", "BiblioTech\BiblioTech.csproj", "{267F020A-5687-4049-B994-29967FA6005A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiblioTech.Domain", "BiblioTech.Domain\BiblioTech.Domain.csproj", "{BE770B44-8680-46AF-91FE-4830C2FCE4CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiblioTech.Infrastructure", "BiblioTech.Infrastructure\BiblioTech.Infrastructure.csproj", "{67128348-F560-4288-99BF-E7E2675D699B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{267F020A-5687-4049-B994-29967FA6005A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{267F020A-5687-4049-B994-29967FA6005A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{267F020A-5687-4049-B994-29967FA6005A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE770B44-8680-46AF-91FE-4830C2FCE4CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE770B44-8680-46AF-91FE-4830C2FCE4CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE770B44-8680-46AF-91FE-4830C2FCE4CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE770B44-8680-46AF-91FE-4830C2FCE4CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67128348-F560-4288-99BF-E7E2675D699B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67128348-F560-4288-99BF-E7E2675D699B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67128348-F560-4288-99BF-E7E2675D699B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67128348-F560-4288-99BF-E7E2675D699B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

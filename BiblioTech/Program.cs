@@ -1,6 +1,10 @@
+using BiblioTech.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder( args );
 
-// Add services to the container.
+// Configure EF Core with PostgreSQL
+builder.Services.AddDbContext<LibraryDbContext>( options => options.UseNpgsql( builder.Configuration.GetConnectionString( "DefaultConnection" ) ) );
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
