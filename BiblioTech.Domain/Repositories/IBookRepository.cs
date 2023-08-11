@@ -4,8 +4,10 @@ namespace BiblioTech.Domain.Repositories
 {
     public interface IBookRepository
     {
+        Task<Book> AddAsync( Book book );
         Task<IEnumerable<Book>> GetAllAsync();
-        Task<IEnumerable<Book>> GetByIdAsync(int id);
+        Task<Book> GetByIdAsync( int id );
+        Task<Book> UpdateAsync( Book book );
         Task<bool> DeleteAsync( int id );
     }
 }

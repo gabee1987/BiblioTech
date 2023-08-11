@@ -1,23 +1,114 @@
 ﻿using BiblioTech.Domain.Entities;
 using BiblioTech.Domain.Repositories;
+using BiblioTech.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace BiblioTech.Infrastructure.Repositories
 {
     public class BookRepository : IBookRepository
     {
-        public Task<bool> DeleteAsync( int id )
+        private readonly LibraryDbContext _dbContext;
+        private readonly ILogger<BookRepository> _logger;
+
+        public BookRepository( LibraryDbContext dbContext )
         {
-            throw new NotImplementedException();
+            _dbContext = dbContext;
         }
 
-        public Task<IEnumerable<Book>> GetAllAsync()
+        public async Task<Book> AddAsync( Book book )
         {
-            throw new NotImplementedException();
+            if ( book == null )
+            {
+                _logger.LogError( "The book to add is null." );
+                throw new ArgumentNullException( nameof(book) );
+            }
+
+            try
+            {
+                await _dbContext.Books.AddAsync( book );
+                await _dbContext.SaveChangesAsync();
+                return book;
+            }
+            catch ( Exception ex )
+            {
+                _logger.LogError( ex, "An error occurred while adding the book with an ID of {BookId}.", book.Id );
+                throw;
+            }
         }
 
-        public Task<IEnumerable<Book>> GetByIdAsync( int id )
+        public async Task<IEnumerable<Book>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _dbContext.Books.ToListAsync();
+            }
+            catch ( Exception ex )
+            {
+                _logger.LogError( ex, "An error occured while fetching all books." );
+                throw;
+            }
         }
+
+        public async Task<Book> GetByIdAsync( int id )
+        {
+            try
+            {
+                return await _dbContext.Books.FindAsync( id );
+            }
+            catch ( Exception ex )
+            {
+                _logger.LogError( ex, "An error occured while fetching a book with the ID of {BookId}", id );
+                throw;
+            }
+        }
+        public async Task<Book> UpdateAsync( Book book )
+        {
+            if ( book == null )
+            {
+                _logger.LogError( "Attempted to update a null book." );
+                throw new ArgumentNullException( nameof(book) );
+            }
+
+            try
+            {
+                _dbContext.Books.Update( book );
+                await _dbContext.SaveChangesAsync();
+                return book;
+            }
+            catch ( DbUpdateConcurrencyException ex ) when ( ex.Entries.Single().Entity is  Book )
+            {
+                _logger.LogError( ex, "Concurrency conflict while updating a book with an ID of {BookId}. The book was modified by another user.", book.Id );
+                throw new InvalidOperationException( $"The book with an ID of {book.Id} was modified by another user.", ex );
+            }
+            catch ( Exception ex )
+            {
+                _logger.LogError( ex, "An error occured while updating a book with an ID of {BookId}", book.Id );
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteAsync( int id )
+        {
+            try
+            {
+                var book = new Book { Id = id };
+                _dbContext.Books.Attach( book );
+                _dbContext.Books.Remove( book );
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch ( DbUpdateConcurrencyException ex ) when ( !_dbContext.Books.Any( book => book.Id == id ) )
+            {
+                _logger.LogError( ex, "Concurrency conflict while deleting a book with an ID of {BookId}. The book was deleted by another user.", id );
+                return false; 
+            }
+            catch ( Exception ex )
+            {
+                _logger.LogError( ex, "An error occured while deleting a book with an ID of {BookId}", id );
+                throw;
+            }
+        }
+
     }
 }
