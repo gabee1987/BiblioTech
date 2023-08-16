@@ -11,6 +11,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Configure AutoMapper
+builder.Services.AddAutoMapper( typeof( BiblioTech.Services.MappingProfiles.BookProfile ).Assembly );
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
