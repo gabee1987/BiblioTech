@@ -45,7 +45,7 @@ namespace BiblioTech.Controllers
         }
 
         // PUT: api/books/5
-        [HttpPut]
+        [HttpPut("id")]
         public async Task<IActionResult> PutBook( int id, BookDTO bookDTO )
         {
             if ( id != bookDTO.Id )
@@ -64,7 +64,7 @@ namespace BiblioTech.Controllers
         }
 
         // DELETE: api/books/5
-        [HttpDelete]
+        [HttpDelete( "id" )]
         public async Task<IActionResult> DeleteBook( int id )
         {
             var result = await _bookService.DeleteBookAsync( id );
