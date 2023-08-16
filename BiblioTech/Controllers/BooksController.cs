@@ -21,8 +21,8 @@ namespace BiblioTech.Controllers
             return Ok(await _bookService.GetAllBookAsync());
         }
 
-        // GET: api/book/5
-        [HttpGet]
+        // GET: api/books/5
+        [HttpGet("id")]
         public async Task<ActionResult<BookDTO>> GetBook( int id )
         {
             var book = await _bookService.GetBookByIdAsync( id );
