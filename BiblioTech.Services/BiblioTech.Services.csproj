@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BiblioTech.Domain\BiblioTech.Domain.csproj" />
     <ProjectReference Include="..\BiblioTech.DTO\BiblioTech.DTO.csproj" />
   </ItemGroup>
 
