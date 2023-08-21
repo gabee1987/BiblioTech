@@ -9,7 +9,7 @@ public partial class Program
 {
 
     static string connString = "Host=localhost;Database=bibliotech_db;Username=bibliotech_user;Password=postgres87";
-    static string API_KEY    = "REMOVED_FOR_SECURITY";
+    static string API_KEY    = "YOUR_GOOGLE_API_KEY_HERE";
     static int numberOfBooks = 500;
 
     public static async Task Main( string[] args )
