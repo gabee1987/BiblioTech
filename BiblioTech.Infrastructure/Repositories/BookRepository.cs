@@ -11,9 +11,10 @@ namespace BiblioTech.Infrastructure.Repositories
         private readonly LibraryDbContext _dbContext;
         private readonly ILogger<BookRepository> _logger;
 
-        public BookRepository( LibraryDbContext dbContext )
+        public BookRepository( LibraryDbContext dbContext, ILogger<BookRepository> logger )
         {
             _dbContext = dbContext;
+            _logger    = logger;
         }
 
         public async Task<Book> AddAsync( Book book )
