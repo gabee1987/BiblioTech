@@ -16,6 +16,10 @@ namespace BiblioTech.Controllers
         }
 
         // GET: api/books
+        /// <summary>
+        /// Retrieves a list of all available books.
+        /// </summary>
+        /// <returns>A list of books.</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookDTO>>> GetBooks()
         {
@@ -23,6 +27,11 @@ namespace BiblioTech.Controllers
         }
 
         // GET: api/books/5
+        /// <summary>
+        /// Retrieves a book based on the given ID.
+        /// </summary>
+        /// <param name="id">The ID of the desired book.</param>
+        /// <returns>The specified book or NotFound if not found.</returns>
         [HttpGet("id")]
         public async Task<ActionResult<BookDTO>> GetBook( int id )
         {
@@ -37,6 +46,11 @@ namespace BiblioTech.Controllers
         }
 
         // POST: api/books
+        /// <summary>
+        /// Adds a new book.
+        /// </summary>
+        /// <param name="bookDTO">The details of the book to add.</param>
+        /// <returns>The newly created book with its assigned ID.</returns>
         [HttpPost]
         public async Task<ActionResult<BookDTO>> PostBook( BookDTO bookDTO )
         {
@@ -46,6 +60,12 @@ namespace BiblioTech.Controllers
         }
 
         // PUT: api/books/5
+        /// <summary>
+        /// Updates the details of a specific book.
+        /// </summary>
+        /// <param name="id">The ID of the book to update.</param>
+        /// <param name="bookDTO">The updated details of the book.</param>
+        /// <returns>NoContent on success or NotFound if not found.</returns>
         [HttpPut("id")]
         public async Task<IActionResult> PutBook( int id, BookDTO bookDTO )
         {
@@ -65,6 +85,11 @@ namespace BiblioTech.Controllers
         }
 
         // DELETE: api/books/5
+        /// <summary>
+        /// Deletes a specific book by ID.
+        /// </summary>
+        /// <param name="id">The ID of the book to delete.</param>
+        /// <returns>NoContent on successful deletion or NotFound if not found.</returns>
         [HttpDelete( "id" )]
         public async Task<IActionResult> DeleteBook( int id )
         {
@@ -79,6 +104,11 @@ namespace BiblioTech.Controllers
         }
 
         // GET /api/books/search?query=searchTerm
+        /// <summary>
+        /// Searches for books based on a query term.
+        /// </summary>
+        /// <param name="searchModel">The search term or query to look for.</param>
+        /// <returns>A list of books that match the search term.</returns>
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<BookDTO>>> SearchBooks( [FromQuery] BookSearchModel searchModel )
         {
