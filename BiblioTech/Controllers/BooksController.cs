@@ -58,11 +58,16 @@ namespace BiblioTech.Controllers
                 {
                     Success = false,
                     Message = "Book not found.",
-                    Data = null
+                    Data    = null
                 } );
             }
 
-            return Ok(book);
+            return Ok( new ApiResponse<BookDTO>
+            {
+                Success = true,
+                Message = "Book retrieved successfully.",
+                Data    = book
+            } );
         }
 
         // POST: api/books
@@ -76,7 +81,26 @@ namespace BiblioTech.Controllers
         {
             var book = await _bookService.AddBookAsync( bookDTO );
 
-            return CreatedAtAction( nameof( GetBook ), new { id = book.Id }, book );
+            if ( book == null )
+            {
+                return BadRequest( new ApiResponse<BookDTO>
+                {
+                    Success = false,
+                    Message = "Failed to create the book.",
+                    Data    = null
+                } );
+            }
+
+            return CreatedAtAction(
+                nameof( GetBook ),
+                new { id = book.Id },
+                new ApiResponse<BookDTO>
+                {
+                    Success = true,
+                    Message = "Book created successfully.",
+                    Data    = book
+                }
+            );
         }
 
         // PUT: api/books/5
@@ -148,7 +172,13 @@ namespace BiblioTech.Controllers
             }
 
             var books = await _bookService.SearchBooksAsync( searchModel.Query );
-            return Ok( books );
+
+            return Ok( new ApiResponse<IEnumerable<BookDTO>>
+            {
+                Success = true,
+                Message = "Books retrieved successfully.",
+                Data    = books
+            } );
         }
     }
 }
