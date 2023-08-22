@@ -23,7 +23,22 @@ namespace BiblioTech.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookDTO>>> GetBooks()
         {
-            return Ok(await _bookService.GetAllBookAsync());
+            var books = await _bookService.GetAllBookAsync();
+
+            if ( books == null || !books.Any() )
+                return Ok( new ApiResponse<IEnumerable<BookDTO>>
+                {
+                    Success = false,
+                    Message = "No books found.",
+                    Data    = null
+                } );
+
+            return Ok( new ApiResponse<IEnumerable<BookDTO>>
+            {
+                Success = true,
+                Message = "Books retrieved successfully.",
+                Data    = books
+            } );
         }
 
         // GET: api/books/5
@@ -39,7 +54,12 @@ namespace BiblioTech.Controllers
 
             if ( book == null )
             {
-                return NotFound();
+                return NotFound( new ApiResponse<BookDTO>
+                {
+                    Success = false,
+                    Message = "Book not found.",
+                    Data = null
+                } );
             }
 
             return Ok(book);
@@ -78,7 +98,12 @@ namespace BiblioTech.Controllers
 
             if ( updatedBook == null )
             {
-                return NotFound( nameof( GetBook ) );
+                return NotFound( new ApiResponse<BookDTO>
+                {
+                    Success = false,
+                    Message = "Book not found.",
+                    Data    = null
+                } );
             }
 
             return NoContent();
@@ -97,7 +122,12 @@ namespace BiblioTech.Controllers
 
             if ( !result )
             {
-                return NotFound();
+                return NotFound( new ApiResponse<BookDTO>
+                {
+                    Success = false,
+                    Message = "Book not found.",
+                    Data    = null
+                } );
             }
 
             return NoContent();
