@@ -1,4 +1,5 @@
 ﻿using BiblioTech.DTO;
+using BiblioTech.Models;
 using BiblioTech.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -79,9 +80,14 @@ namespace BiblioTech.Controllers
 
         // GET /api/books/search?query=searchTerm
         [HttpGet("search")]
-        public async Task<ActionResult<IEnumerable<BookDTO>>> SearchBooks( string query )
+        public async Task<ActionResult<IEnumerable<BookDTO>>> SearchBooks( [FromQuery] BookSearchModel searchModel )
         {
-            var books = await _bookService.SearchBooksAsync( query );
+            if ( !ModelState.IsValid )
+            {
+                return BadRequest( ModelState );
+            }
+
+            var books = await _bookService.SearchBooksAsync( searchModel.Query );
             return Ok( books );
         }
     }
