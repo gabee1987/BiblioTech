@@ -93,9 +93,13 @@ namespace BiblioTech.Infrastructure.Repositories
         {
             try
             {
-                var book = new Book { Id = id };
-                _dbContext.Books.Attach( book );
-                _dbContext.Books.Remove( book );
+                var entity = await _dbContext.Books.FindAsync( id );
+                if ( entity == null )
+                {
+                    return false;
+                }
+
+                _dbContext.Books.Remove( entity );
                 await _dbContext.SaveChangesAsync();
                 return true;
             }
@@ -107,7 +111,7 @@ namespace BiblioTech.Infrastructure.Repositories
             catch ( Exception ex )
             {
                 _logger.LogError( ex, "An error occured while deleting a book with an ID of {BookId}", id );
-                throw;
+                return false;
             }
         }
 
