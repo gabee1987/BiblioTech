@@ -111,5 +111,28 @@ namespace BiblioTech.Infrastructure.Repositories
             }
         }
 
+        public async Task<IEnumerable<Book>> SearchBooksAsync( string query )
+        {
+            string lowerQuery = query.ToLower();
+
+            try
+            {
+                return await _dbContext.Books
+                    .Include( b => b.Authors )
+                    .Include( b => b.Genres )
+                    .Where( b => b.Title.ToLower().Contains( lowerQuery )
+                            || b.Subtitle != null && b.Subtitle.ToLower().Contains( lowerQuery )
+                            || b.ISBN10 != null && b.ISBN10.ToLower().Contains( lowerQuery )
+                            || b.ISBN13 != null && b.ISBN13.ToLower().Contains( lowerQuery )
+                            || b.Description != null && b.Description.ToLower().Contains( lowerQuery )
+                            || b.Publisher != null && b.Publisher.ToLower().Contains( lowerQuery )
+                    ).ToListAsync();
+            }
+            catch ( Exception ex )
+            {
+                _logger.LogError( ex, "An error occurred while searching for books with query {Query}.", query );
+                throw;
+            }
+        }
     }
 }

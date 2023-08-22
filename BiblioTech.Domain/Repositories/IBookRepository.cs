@@ -9,5 +9,6 @@ namespace BiblioTech.Domain.Repositories
         Task<Book> GetByIdAsync( int id );
         Task<Book> UpdateAsync( Book book );
         Task<bool> DeleteAsync( int id );
+        Task<IEnumerable<Book>> SearchBooksAsync( string query );
     }
 }

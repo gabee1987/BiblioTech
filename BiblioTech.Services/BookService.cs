@@ -51,5 +51,11 @@ namespace BiblioTech.Services
         {
             return await _bookRepository.DeleteAsync( id );
         }
+
+        public async Task<IEnumerable<BookDTO>> SearchBooksAsync( string query )
+        {
+            var books = await _bookRepository.SearchBooksAsync( query );
+            return _mapper.Map<IEnumerable<BookDTO>>( books );
+        }
     }
 }

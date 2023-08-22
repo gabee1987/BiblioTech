@@ -9,5 +9,6 @@ namespace BiblioTech.Services.Interfaces
         Task<BookDTO> GetBookByIdAsync( int id );
         Task<BookDTO> UpdateBookAsync( BookDTO bookDTO );
         Task<bool> DeleteBookAsync( int id );
+        Task<IEnumerable<BookDTO>> SearchBooksAsync( string query  );
     }
 }

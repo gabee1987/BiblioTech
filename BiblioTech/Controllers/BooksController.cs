@@ -76,5 +76,13 @@ namespace BiblioTech.Controllers
 
             return NoContent();
         }
+
+        // GET /api/books/search?query=searchTerm
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<BookDTO>>> SearchBooks( string query )
+        {
+            var books = await _bookService.SearchBooksAsync( query );
+            return Ok( books );
+        }
     }
 }
