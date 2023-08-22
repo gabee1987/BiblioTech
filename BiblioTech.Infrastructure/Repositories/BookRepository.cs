@@ -113,19 +113,19 @@ namespace BiblioTech.Infrastructure.Repositories
 
         public async Task<IEnumerable<Book>> SearchBooksAsync( string query )
         {
-            string lowerQuery = query.ToLower();
-
             try
             {
                 return await _dbContext.Books
                     .Include( b => b.Authors )
                     .Include( b => b.Genres )
-                    .Where( b => b.Title.ToLower().Contains( lowerQuery )
-                            || b.Subtitle != null && b.Subtitle.ToLower().Contains( lowerQuery )
-                            || b.ISBN10 != null && b.ISBN10.ToLower().Contains( lowerQuery )
-                            || b.ISBN13 != null && b.ISBN13.ToLower().Contains( lowerQuery )
-                            || b.Description != null && b.Description.ToLower().Contains( lowerQuery )
-                            || b.Publisher != null && b.Publisher.ToLower().Contains( lowerQuery )
+                    .Where( b => EF.Functions.ILike( b.Title, $"%{query}%" )
+                            || b.Subtitle != null && EF.Functions.ILike( b.Subtitle, $"%{query}%" )
+                            || b.ISBN10 != null && EF.Functions.ILike( b.ISBN10, $"%{query}%" )
+                            || b.ISBN13 != null && EF.Functions.ILike( b.ISBN13, $"%{query}%" )
+                            || b.Description != null && EF.Functions.ILike( b.Description, $"%{query}%" )
+                            || b.Publisher != null && EF.Functions.ILike( b.Publisher, $"%{query}%" )
+                            || b.Authors.Any( a => EF.Functions.ILike( a.Name, $"%{query}%" ) )
+                            || b.Genres.Any( g => EF.Functions.ILike( g.Name, $"%{query}%" ) )
                     ).ToListAsync();
             }
             catch ( Exception ex )
