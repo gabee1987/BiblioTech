@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BiblioTech.Services", "Bibl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BiblioTech.DTO", "BiblioTech.DTO\BiblioTech.DTO.csproj", "{5AE02EE1-9199-400D-A401-68E16CEEFC33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiblioTech.DataPopulator", "BiblioTech.DataPopulator\BiblioTech.DataPopulator.csproj", "{E3D2C374-0240-479D-8377-5EE2564331B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BiblioTech.DataPopulator", "BiblioTech.DataPopulator\BiblioTech.DataPopulator.csproj", "{E3D2C374-0240-479D-8377-5EE2564331B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiblioTech.Tests", "BiblioTech.Tests\BiblioTech.Tests.csproj", "{241BF5B5-7A09-4B7C-8D89-784296D0A47C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{E3D2C374-0240-479D-8377-5EE2564331B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3D2C374-0240-479D-8377-5EE2564331B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3D2C374-0240-479D-8377-5EE2564331B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{241BF5B5-7A09-4B7C-8D89-784296D0A47C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{241BF5B5-7A09-4B7C-8D89-784296D0A47C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{241BF5B5-7A09-4B7C-8D89-784296D0A47C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{241BF5B5-7A09-4B7C-8D89-784296D0A47C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
