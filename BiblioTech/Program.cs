@@ -1,4 +1,5 @@
 using BiblioTech.Domain.Repositories;
+using BiblioTech.Filters;
 using BiblioTech.Infrastructure.Data;
 using BiblioTech.Infrastructure.Repositories;
 using BiblioTech.Services;
@@ -10,7 +11,10 @@ var builder = WebApplication.CreateBuilder( args );
 // Configure EF Core with PostgreSQL
 builder.Services.AddDbContext<LibraryDbContext>( options => options.UseNpgsql( builder.Configuration.GetConnectionString( "DefaultConnection" ) ) );
 builder.Services.AddLogging();
-builder.Services.AddControllers();
+builder.Services.AddControllers( options =>
+{
+    options.Filters.Add( typeof( AuditLogActionFilter ) );
+} ); 
 
 // Application Services
 builder.Services.AddScoped<IBookService, BookService>();

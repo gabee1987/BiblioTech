@@ -37,7 +37,7 @@ namespace BiblioTech.Infrastructure.Migrations
                     b.ToTable("AuthorBook");
                 });
 
-            modelBuilder.Entity("BiblioTech.Domain.Entities.AuditEntry", b =>
+            modelBuilder.Entity("BiblioTech.Domain.Entities.AuditLog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,32 +45,28 @@ namespace BiblioTech.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Action")
+                    b.Property<string>("ActionName")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("AffectedColumn")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("AuditDate")
+                    b.Property<DateTime>("CallDateTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("NewValues")
+                    b.Property<string>("ControllerName")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("OldValues")
+                    b.Property<string>("Parameters")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("TableName")
+                    b.Property<string>("Response")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("AuditEntries");
+                    b.ToTable("AuditLogs");
                 });
 
             modelBuilder.Entity("BiblioTech.Domain.Entities.Author", b =>

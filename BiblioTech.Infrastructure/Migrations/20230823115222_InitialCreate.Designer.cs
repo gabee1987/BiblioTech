@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BiblioTech.Infrastructure.Migrations
 {
     [DbContext(typeof(LibraryDbContext))]
-    [Migration("20230821152826_InitialCreate")]
+    [Migration("20230823115222_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -38,6 +38,38 @@ namespace BiblioTech.Infrastructure.Migrations
                     b.HasIndex("BooksId");
 
                     b.ToTable("AuthorBook");
+                });
+
+            modelBuilder.Entity("BiblioTech.Domain.Entities.AuditLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ActionName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CallDateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ControllerName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Parameters")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Response")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuditLogs");
                 });
 
             modelBuilder.Entity("BiblioTech.Domain.Entities.Author", b =>
