@@ -57,5 +57,23 @@ namespace BiblioTech.Services
             var books = await _bookRepository.SearchBooksAsync( query );
             return _mapper.Map<IEnumerable<BookDTO>>( books );
         }
+
+        public async Task<IEnumerable<BookDTO>> SearchBooksByTitle( string title )
+        {
+            var books = await _bookRepository.SearchBooksByTitle( title );
+            return _mapper.Map<IEnumerable<BookDTO>>( books );
+        }
+
+        public async Task<IEnumerable<BookDTO>> SearchBooksByAuthorAsync( string author )
+        {
+            var books = await _bookRepository.SearchBooksByAuthorAsync( author );
+            return _mapper.Map<IEnumerable<BookDTO>>( books );
+        }
+
+        public async Task<IEnumerable<BookDTO>> SearchBooksByGenreAsync( string genre )
+        {
+            var books = await _bookRepository.SearchBooksByGenreAsync( genre );
+            return _mapper.Map<IEnumerable<BookDTO>>( books );
+        }
     }
 }

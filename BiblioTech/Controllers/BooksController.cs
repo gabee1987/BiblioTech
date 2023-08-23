@@ -180,5 +180,107 @@ namespace BiblioTech.Controllers
                 Data    = books
             } );
         }
+
+        // GET /api/books/search/title?query=searchTerm
+        /// <summary>
+        /// Searches for books based on title.
+        /// </summary>
+        /// <param name="searchModel">The search term or query to look for.</param>
+        /// <returns>A list of books that match the search term.</returns>
+        [HttpGet( "search/title" )]
+        public async Task<ActionResult<IEnumerable<BookDTO>>> SearchBooksByTitle( [FromQuery] BookSearchModel searchModel )
+        {
+            if ( !ModelState.IsValid )
+            {
+                return BadRequest( ModelState );
+            }
+
+            var books = await _bookService.SearchBooksByTitle( searchModel.Query );
+
+            if ( !books.Any() )
+            {
+                return Ok( new ApiResponse<IEnumerable<BookDTO>>
+                {
+                    Success = true,
+                    Message = "No books found for the provided query.",
+                    Data    = new List<BookDTO>()
+                } );
+            }
+
+            return Ok( new ApiResponse<IEnumerable<BookDTO>>
+            {
+                Success = true,
+                Message = "Books retrieved successfully.",
+                Data    = books
+            } );
+        }
+
+        // GET /api/books/search/author?query=searchTerm
+        /// <summary>
+        /// Searches for books based on author.
+        /// </summary>
+        /// <param name="searchModel">The search term or query to look for.</param>
+        /// <returns>A list of books that match the search term.</returns>
+        [HttpGet( "search/author" )]
+        public async Task<ActionResult<IEnumerable<BookDTO>>> SearchBooksByAuthor( [FromQuery] BookSearchModel searchModel )
+        {
+            if ( !ModelState.IsValid )
+            {
+                return BadRequest( ModelState );
+            }
+
+            var books = await _bookService.SearchBooksByAuthorAsync( searchModel.Query );
+
+            if ( !books.Any() )
+            {
+                return Ok( new ApiResponse<IEnumerable<BookDTO>>
+                {
+                    Success = true,
+                    Message = "No books found for the provided query.",
+                    Data    = new List<BookDTO>()
+                } );
+            }
+
+            return Ok( new ApiResponse<IEnumerable<BookDTO>>
+            {
+                Success = true,
+                Message = "Books retrieved successfully.",
+                Data    = books
+            } );
+        }
+
+        // GET /api/books/search/genre?query=searchTerm
+        /// <summary>
+        /// Searches for books based on genre.
+        /// </summary>
+        /// <param name="searchModel">The search term or query to look for.</param>
+        /// <returns>A list of books that match the search term.</returns>
+        [HttpGet( "search/genre" )]
+        public async Task<ActionResult<IEnumerable<BookDTO>>> SearchBooksByGenre( [FromQuery] BookSearchModel searchModel )
+        {
+            if ( !ModelState.IsValid )
+            {
+                return BadRequest( ModelState );
+            }
+
+            var books = await _bookService.SearchBooksByGenreAsync( searchModel.Query );
+
+            if ( !books.Any() )
+            {
+                return Ok( new ApiResponse<IEnumerable<BookDTO>>
+                {
+                    Success = true,
+                    Message = "No books found for the provided query.",
+                    Data    = new List<BookDTO>()
+                } );
+            }
+
+            return Ok( new ApiResponse<IEnumerable<BookDTO>>
+            {
+                Success = true,
+                Message = "Books retrieved successfully.",
+                Data    = books
+            } );
+        }
     }
 }

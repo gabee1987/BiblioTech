@@ -3,6 +3,7 @@ using BiblioTech.Domain.Repositories;
 using BiblioTech.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BiblioTech.Infrastructure.Repositories
 {
@@ -135,6 +136,52 @@ namespace BiblioTech.Infrastructure.Repositories
             catch ( Exception ex )
             {
                 _logger.LogError( ex, "An error occurred while searching for books with query {Query}.", query );
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Book>> SearchBooksByTitle( string title )
+        {
+            try
+            {
+                return await _dbContext.Books
+                    .Where( b => EF.Functions.ILike( b.Title, $"%{title}%" ) ).ToListAsync();
+            }
+            catch ( Exception ex )
+            {
+                _logger.LogError( ex, "An error occurred while searching for books by title {title}.", title );
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Book>> SearchBooksByAuthorAsync( string author )
+        {
+            try
+            {
+                return await _dbContext.Books
+                    .Include( b => b.Authors )
+                    .Where( b => b.Authors.Any( a => EF.Functions.ILike( a.Name, $"%{author}%" ) )
+                    ).ToListAsync();
+            }
+            catch ( Exception ex )
+            {
+                _logger.LogError( ex, "An error occurred while searching for books by author {author}.", author );
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Book>> SearchBooksByGenreAsync( string genre )
+        {
+            try
+            {
+                return await _dbContext.Books
+                    .Include( b => b.Genres )
+                    .Where( b => b.Genres.Any( g => EF.Functions.ILike( g.Name, $"%{genre}%" ) )
+                    ).ToListAsync();
+            }
+            catch ( Exception ex )
+            {
+                _logger.LogError( ex, "An error occurred while searching for books by author {genre}.", genre );
                 throw;
             }
         }
