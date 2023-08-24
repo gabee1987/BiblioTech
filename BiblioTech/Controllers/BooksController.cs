@@ -195,7 +195,7 @@ namespace BiblioTech.Controllers
                 return BadRequest( ModelState );
             }
 
-            var books = await _bookService.SearchBooksByTitle( searchModel.Query );
+            var books = await _bookService.SearchBooksByTitleAsync( searchModel.Query );
 
             if ( !books.Any() )
             {

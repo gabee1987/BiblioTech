@@ -58,9 +58,9 @@ namespace BiblioTech.Services
             return _mapper.Map<IEnumerable<BookDTO>>( books );
         }
 
-        public async Task<IEnumerable<BookDTO>> SearchBooksByTitle( string title )
+        public async Task<IEnumerable<BookDTO>> SearchBooksByTitleAsync( string title )
         {
-            var books = await _bookRepository.SearchBooksByTitle( title );
+            var books = await _bookRepository.SearchBooksByTitleAsync( title );
             return _mapper.Map<IEnumerable<BookDTO>>( books );
         }
 

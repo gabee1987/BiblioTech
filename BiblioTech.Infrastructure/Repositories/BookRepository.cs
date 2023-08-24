@@ -140,7 +140,7 @@ namespace BiblioTech.Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<Book>> SearchBooksByTitle( string title )
+        public async Task<IEnumerable<Book>> SearchBooksByTitleAsync( string title )
         {
             try
             {
