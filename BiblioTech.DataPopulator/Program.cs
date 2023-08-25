@@ -12,7 +12,7 @@ public partial class Program
 {
 
     static string connString     = "Host=localhost;Database=bibliotech_db;Username=bibliotech_user;Password=postgres87";
-    static string API_KEY        = "YOUR_GOOGLE_API_KEY_HERE";
+    static string API_KEY        = Environment.GetEnvironmentVariable( "BiblioTech_GOOGLE_BOOKS_API_KEY" );
     static int numberOfBooks     = 500;
     static string googleBooksUri = "https://www.googleapis.com";
 
