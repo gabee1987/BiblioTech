@@ -4,20 +4,26 @@ using BiblioTech.DTO;
 using BiblioTech.Services.Interfaces;
 using BiblioTech.Services;
 using BiblioTech.Infrastructure;
+using Refit;
+using BiblioTech.DataPopulator;
+using Microsoft.Extensions.Logging;
 
 public partial class Program
 {
 
-    static string connString = "Host=localhost;Database=bibliotech_db;Username=bibliotech_user;Password=postgres87";
-    static string API_KEY    = "YOUR_GOOGLE_API_KEY_HERE";
-    static int numberOfBooks = 500;
+    static string connString     = "Host=localhost;Database=bibliotech_db;Username=bibliotech_user;Password=postgres87";
+    static string API_KEY        = "YOUR_GOOGLE_API_KEY_HERE";
+    static int numberOfBooks     = 500;
+    static string googleBooksUri = "https://www.googleapis.com";
 
     public static async Task Main( string[] args )
     {
         using var host = CreateHostBuilder( args ).Build();
+        var logger = host.Services.GetRequiredService<ILogger<Program>>();
+
         WriteMessage( "Starting to populate the db with books from Google Books API...", ConsoleColor.White );
 
-        await PopulateDatabaseAsync( host.Services );
+        await PopulateDatabaseAsync( host.Services, logger );
 
         await host.RunAsync();
     }
@@ -27,16 +33,23 @@ public partial class Program
             .ConfigureServices( ( _, services ) =>
             {
                 services.RegisterInfrastructureServices( connString );
+                services.AddRefitClient<IGoogleBooksApi>().ConfigureHttpClient( c => c.BaseAddress = new Uri( googleBooksUri ) );
                 services.AddTransient<IBookService, BookService>();
+            } )
+            .ConfigureLogging( logging =>
+            {
+                logging.ClearProviders();
             } );
 
-    private static async Task PopulateDatabaseAsync( IServiceProvider serviceProvider )
+    private static async Task PopulateDatabaseAsync( IServiceProvider serviceProvider, ILogger logger )
     {
-        var bookService = serviceProvider.GetRequiredService<IBookService>();
+        var bookService    = serviceProvider.GetRequiredService<IBookService>();
+        var googleBooksApi = serviceProvider.GetRequiredService<IGoogleBooksApi>();
 
         WriteMessage( "Fetching books from Google Books API...", ConsoleColor.White );
+        logger.LogInformation( "Fetching books from Google Books API..." );
 
-        var books = await FetchBooksFromAPI( numberOfBooks );
+        var books = await FetchBooksFromAPIAsync( googleBooksApi, numberOfBooks, logger );
 
         if ( books == null || !books.Any() )
         {
@@ -49,6 +62,8 @@ public partial class Program
         WriteMessage( $"Populating the database...", ConsoleColor.White );
         Console.WriteLine();
 
+        logger.LogInformation( $"Found {books.Count} books." );
+
         foreach ( var bookDTO in books )
         {
             await bookService.AddBookAsync( bookDTO );
@@ -59,28 +74,28 @@ public partial class Program
         WriteMessage( $"Successfully added {books.Count} books to the database.", ConsoleColor.Green );
         WriteMessage( $"-------------------------------------------------------", ConsoleColor.Green );
         Console.WriteLine();
+
+        logger.LogInformation( $"Successfully added {books.Count} books to the database." );
     }
 
-    private static async Task<List<BookDTO>> FetchBooksFromAPI( int numberOfBooks )
+    private static async Task<List<BookDTO>> FetchBooksFromAPIAsync( IGoogleBooksApi googleBooksApi, int numberOfBooks, ILogger logger )
     {
         var books  = new List<BookDTO>();
 
-        using ( var httpClient = new HttpClient() )
+        // As the Google Books API allows a maximum of 40 books per request, 
+        // let's fetch them in chunks
+        int maxGoogleBooksApiResults = 40;
+        int numberOfRequests         = (int)Math.Ceiling( (double)numberOfBooks / maxGoogleBooksApiResults );
+        int fetchedBooksCount        = 0;
+
+        for ( int i = 0; i < numberOfRequests; i++ )
         {
-            // As the Google Books API allows a maximum of 40 books per request, 
-            // let's fetch them in chunks
-            int maxResultsPerRequest = 40;
-            int numberOfRequests     = (int)Math.Ceiling( (double)numberOfBooks / maxResultsPerRequest );
-            int fetchedBooksCount    = 0;
-
-            for ( int i = 0; i < numberOfRequests; i++ )
+            try
             {
-                var httpResponse = await httpClient.GetAsync( $"https://www.googleapis.com/books/v1/volumes?q=books&projection=full&printType=books&startIndex={i * maxResultsPerRequest}&maxResults={maxResultsPerRequest}&key={API_KEY}" );
+                // Using Refit to handle google books api call
+                var googleBooksResponse = await googleBooksApi.GetBooks( i * maxGoogleBooksApiResults, maxGoogleBooksApiResults, API_KEY );
 
-                var content             = await httpResponse.Content.ReadAsStringAsync();
-                var googleBooksResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<GoogleBooksResponse>( content );
-
-                books.AddRange( googleBooksResponse.Items.Select( item => new BookDTO 
+                books.AddRange( googleBooksResponse.Items.Select( item => new BookDTO
                 {
                     Title          = item.VolumeInfo.Title,
                     Subtitle       = item.VolumeInfo.Subtitle,
@@ -101,6 +116,11 @@ public partial class Program
                 // Break if we've fetched the desired number of books
                 if ( fetchedBooksCount >= numberOfBooks )
                     break;
+            }
+            catch ( Exception ex )
+            {
+                logger.LogError( ex, "There was an error while fetching books from google books API." );
+                throw;
             }
         }
 
